@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milanuo.springboot2mybatisforum.module.topic.dao.TopicMapper">
+    <resultMap id="BaseResultMap" type="com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="good" jdbcType="TINYINT" property="good"/>
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="top" jdbcType="TINYINT" property="top"/>
+        <result column="view" jdbcType="INTEGER" property="view"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="tags" jdbcType="VARCHAR" property="tags"/>
+    </resultMap>
+    <resultMap id="WithReplyCountResultMap" type="com.milanuo.springboot2mybatisforum.core.PageResult.HomePageTopicResult">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="view" jdbcType="INTEGER" property="view"/>
+        <result column="replyCount" jdbcType="INTEGER" property="replyCount"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+               type="com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic">
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, good, in_time, title, top, view, user_id, tags
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from topic
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from topic
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into topic (good, in_time, title,
+        top, view, user_id,
+        tags, content)
+        values (#{good,jdbcType=TINYINT}, #{inTime,jdbcType=TIMESTAMP}, #{title,jdbcType=VARCHAR},
+        #{top,jdbcType=TINYINT}, #{view,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+        #{tags,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="good != null">
+                good,
+            </if>
+            <if test="inTime != null">
+                in_time,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="top != null">
+                top,
+            </if>
+            <if test="view != null">
+                view,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="tags != null">
+                tags,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="good != null">
+                #{good,jdbcType=TINYINT},
+            </if>
+            <if test="inTime != null">
+                #{inTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="top != null">
+                #{top,jdbcType=TINYINT},
+            </if>
+            <if test="view != null">
+                #{view,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="tags != null">
+                #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic">
+        update topic
+        <set>
+            <if test="good != null">
+                good = #{good,jdbcType=TINYINT},
+            </if>
+            <if test="inTime != null">
+                in_time = #{inTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="top != null">
+                top = #{top,jdbcType=TINYINT},
+            </if>
+            <if test="view != null">
+                view = #{view,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="tags != null">
+                tags = #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs"
+            parameterType="com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic">
+    update topic
+    set good = #{good,jdbcType=TINYINT},
+      in_time = #{inTime,jdbcType=TIMESTAMP},
+      title = #{title,jdbcType=VARCHAR},
+      top = #{top,jdbcType=TINYINT},
+      view = #{view,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      tags = #{tags,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic">
+    update topic
+    set good = #{good,jdbcType=TINYINT},
+      in_time = #{inTime,jdbcType=TIMESTAMP},
+      title = #{title,jdbcType=VARCHAR},
+      top = #{top,jdbcType=TINYINT},
+      view = #{view,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      tags = #{tags,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <!--自定义方法-->
+    <select id="query" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM topic
+        <where>
+            <if test="zeroComment != null">
+                AND ((select count(id) from reply where topic_id = topic.id) = 0)
+            </if>
+            <if test="good == true">
+                AND (good = TRUE)
+            </if>
+            <if test="keyWord != null">
+                AND (title LIKE concat('%',#{keyWord},'%')
+                OR content LIKE concat('%',#{keyWord},'%')
+                OR tags LIKE concat('%',#{keyWord},'%'))
+            </if>
+        </where>
+        <if test="newest != null">
+            ORDER BY in_time DESC
+        </if>
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="queryForCount" resultType="java.lang.Integer">
+        SELECT COUNT(id)
+        FROM topic
+        <where>
+            <if test="zeroComment != null">
+                AND ((select count(id) from reply where topic_id = topic.id) = 0)
+            </if>
+            <if test="good == true">
+                AND (good = TRUE)
+            </if>
+            <if test="keyWord != null">
+                AND (title LIKE concat('%',#{keyWord},'%')
+                OR content LIKE concat('%',#{keyWord},'%')
+                OR tags LIKE concat('%',#{keyWord},'%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="getTopicsByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM topic
+        WHERE user_id = #{userId}
+        ORDER BY in_time DESC
+        limit 0,10
+    </select>
+
+    <select id="getHomePageTopicsByUserId" resultMap="WithReplyCountResultMap">
+        SELECT
+        id,title,in_time,view,(select COUNT(*) from reply WHERE reply.topic_id = topic.id) replyCount
+        FROM topic
+        WHERE topic.user_id = #{userId}
+        ORDER BY in_time DESC
+        limit 0,10
+    </select>
+
+    <select id="getUserTopicsByUserId" resultMap="WithReplyCountResultMap">
+        SELECT
+        id,title,in_time,view,(select COUNT(*) from reply WHERE reply.topic_id = topic.id) replyCount
+        FROM topic
+        WHERE topic.user_id = #{id}
+        ORDER BY in_time DESC
+        limit #{pageNum},20
+    </select>
+
+    <select id="getUserTopicsCount" resultType="java.lang.Integer">
+        SELECT COUNT(id)
+        FROM topic
+        WHERE topic.user_id = #{id}
+    </select>
+
+</mapper>

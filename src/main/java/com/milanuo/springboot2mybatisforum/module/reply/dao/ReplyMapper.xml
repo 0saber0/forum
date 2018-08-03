@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.milanuo.springboot2mybatisforum.module.reply.dao.ReplyMapper">
+    <resultMap id="BaseResultMap" type="com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="in_time" property="inTime" jdbcType="TIMESTAMP"/>
+        <result column="topic_id" property="topicId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply"
+               extends="BaseResultMap">
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <resultMap id="HomePageReplyResultMap"
+               type="com.milanuo.springboot2mybatisforum.core.PageResult.HomePageReplyResult">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="in_time" property="inTime" jdbcType="TIMESTAMP"/>
+        <result column="topic_id" property="topicId" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="replyCount" property="replyCount" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, in_time, topic_id, user_id
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from reply
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from reply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply">
+    insert into reply (id, in_time, topic_id, 
+      user_id, content)
+    values (#{id,jdbcType=INTEGER}, #{inTime,jdbcType=TIMESTAMP}, #{topicId,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply">
+        insert into reply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="inTime != null">
+                in_time,
+            </if>
+            <if test="topicId != null">
+                topic_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="inTime != null">
+                #{inTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="topicId != null">
+                #{topicId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply">
+        update reply
+        <set>
+            <if test="inTime != null">
+                in_time = #{inTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="topicId != null">
+                topic_id = #{topicId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs"
+            parameterType="com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply">
+    update reply
+    set in_time = #{inTime,jdbcType=TIMESTAMP},
+      topic_id = #{topicId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply">
+    update reply
+    set in_time = #{inTime,jdbcType=TIMESTAMP},
+      topic_id = #{topicId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <!--自定义方法-->
+    <select id="getReplyCountByTopicId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    SELECT COUNT(id) 
+    FROM reply
+    WHERE topic_id = #{topicId}
+  </select>
+
+    <select id="getReplyByTopicId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        FROM reply
+        WHERE topic_id = #{topicId}
+    </select>
+    <select id="getHomePageReplyResult" resultMap="HomePageReplyResultMap" parameterType="java.lang.Integer">
+      SELECT reply.id id,reply.in_time in_time,reply.topic_id topic_id,topic.title title,reply.user_id user_id, (select username from forum.user where topic.user_id = user.id) username,reply.content content,(select count(id) from reply where reply.topic_id = topic.id) replyCount
+      FROM reply,topic,user
+      where reply.topic_id = topic.id and reply.user_id = user.id and reply.user_id = #{userId}
+      ORDER BY in_time DESC
+      limit 0,6
+    </select>
+    <select id="getUserReplysByUserId" resultMap="HomePageReplyResultMap" parameterType="java.lang.Integer">
+        SELECT reply.id id,reply.in_time in_time,reply.topic_id topic_id,topic.title title,reply.user_id user_id, (select username from forum.user where topic.user_id = user.id) username,reply.content content,(select count(id) from reply where reply.topic_id = topic.id) replyCount
+        FROM reply,topic,user
+        where reply.topic_id = topic.id and reply.user_id = user.id and reply.user_id = #{id}
+        ORDER BY in_time DESC
+        limit #{pageNum},20
+    </select>
+    <select id="getUserReplysCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM reply,topic,user
+        where reply.topic_id = topic.id and reply.user_id = user.id and reply.user_id = #{id}
+    </select>
+</mapper>

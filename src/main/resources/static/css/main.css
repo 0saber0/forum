@@ -1,0 +1,146 @@
+body{
+    background-color: #e6e6e6;
+}
+
+footer{
+    margin-top: 10px;
+}
+
+.container>.content>.left-content{
+    max-height: 1800px;
+    width: 75%;
+    float: left;
+    background-color: #f0f0f0;
+}
+
+.panel-default{
+    margin-bottom: 0;
+
+}
+
+.panel-prestige{
+    margin-top: 10px;
+}
+
+.content>.right-content{
+    width: 23%;
+    float: left;
+    margin-left: 10px;
+}
+
+.content>.right-content>.right-content-top{
+    height: 100px;
+    width: 90%;
+}
+
+.content>.right-content>.right-content-down{
+    height: auto;
+    width: 90%;
+}
+
+.avatar{
+    height: 64px;
+    width: 64px;
+}
+
+.media-body>.title{
+    font-weight: bold;
+    margin-top: 7px;
+}
+
+.divide{
+    border-top: 1px solid #eee;
+}
+
+.mar-top-5{
+    margin-top: 15px;
+}
+
+a img{
+    border-radius: 10px;
+}
+
+.gray{
+    margin-top: 5px;
+}
+
+h5{
+    font-size: larger;
+}
+
+.back-to-top {
+    width: 80px;
+    height: 40px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: rgba(0,0,0,0.3);
+    text-align: center;
+    border: 1px solid white;
+    line-height: 40px;
+    color: white;
+}
+
+.index-nav > li > a {
+    padding: 1px 10px;
+}
+
+/*以上是index.html的*/
+
+/*以下是topic.html的*/
+
+.breadcrumb{
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.topic-img{
+    width: 32px;
+    height: 32px;
+}
+
+.comment-img{
+    width: 25px;
+    height: 25px;
+}
+
+.mar-bottom-0{
+    margin-bottom: 5px;
+}
+
+.comment-detail-content>p{
+    text-indent: 2em;
+}
+
+.editor-btn{
+    text-align: right;
+}
+
+/*以上是topic.html的*/
+
+/*以下是login.ftl的*/
+
+.login-btn{
+    text-align: right;
+}
+
+/*以上是login.ftl的*/
+
+/*以下是register.ftl的*/
+
+.register-btn{
+    text-align: right;
+}
+
+/*以上是register.ftl的*/
+
+/*以下是homepage.html的*/
+
+.homepage-media p{
+    margin: 0;
+}
+
+
+
+
+
