@@ -8,6 +8,7 @@ import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Object;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.core.ajax.AjaxResult;
 import com.milanuo.springboot2mybatisforum.module.reply.service.ReplyService;
+import com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic;
 import com.milanuo.springboot2mybatisforum.module.topic.service.TopicService;
 import com.milanuo.springboot2mybatisforum.module.user.pojo.User;
 import com.milanuo.springboot2mybatisforum.module.user.service.UserService;
@@ -114,9 +115,23 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping("/setting")
-    public String setting(){
-
+    @GetMapping("/setting")
+    public String setting(Integer pageNum,Model model,HttpSession session){
+        Query4Topics query4Topics = new Query4Topics();
+        query4Topics.setId(((User)session.getAttribute("user0")).getId());
+        if(pageNum!=null){
+            query4Topics.setPageNum(pageNum);
+        }else {
+            query4Topics.setPageNum(1);
+        }
+        query4Topics.setPageSize(20);
+        List<Topic> topicList = topicService.getIdTiItByUserId(query4Topics);
+        model.addAttribute("topicList",topicList);
+        BasePageResult basePageResult = new BasePageResult();
+        basePageResult.setTotalCount(topicService.getIdTiItCountByUserId(query4Topics));
+        basePageResult.setPageSize(query4Topics.getPageSize());
+        basePageResult.setPageNum(query4Topics.getPageNum());
+        model.addAttribute("basePageResult",basePageResult);
         return "setting";
     }
 
@@ -180,10 +195,11 @@ public class UserController {
         Query4Topics query4Topics = new Query4Topics();
         query4Topics.setId(topics_user.getId());
         query4Topics.setPageNum(pageNum);
+        query4Topics.setPageSize(20);
         List<HomePageTopicResult> user_topics_list = topicService.getUserTopicsByUserId(query4Topics);
         BasePageResult basePageResult = new BasePageResult();
         basePageResult.setPageNum(pageNum);
-        basePageResult.setPageSize(20);
+        basePageResult.setPageSize(query4Topics.getPageSize());
         basePageResult.setTotalCount(topicService.getUserTopicsCount(query4Topics));
         model.addAttribute("topics_user",topics_user);
         model.addAttribute("user_topics_list",user_topics_list);
@@ -198,10 +214,11 @@ public class UserController {
         Query4Topics query4Topics = new Query4Topics();
         query4Topics.setId(replys_user.getId());
         query4Topics.setPageNum(pageNum);
+        query4Topics.setPageSize(20);
         List<HomePageReplyResult> user_replys_list = replyService.getUserReplysByUserId(query4Topics);
         BasePageResult basePageResult = new BasePageResult();
         basePageResult.setPageNum(pageNum);
-        basePageResult.setPageSize(20);
+        basePageResult.setPageSize(query4Topics.getPageSize());
         basePageResult.setTotalCount(replyService.getUserReplysCount(query4Topics));
         model.addAttribute("replys_user",replys_user);
         model.addAttribute("user_replys_list",user_replys_list);

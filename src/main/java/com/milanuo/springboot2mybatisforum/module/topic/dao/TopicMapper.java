@@ -33,4 +33,8 @@ public interface TopicMapper {
     List<HomePageTopicResult> getUserTopicsByUserId(Query4Topics query4Topics);
 
     Integer getUserTopicsCount(Query4Topics query4Topics);
+
+    List<Topic> getIdTiItByUserId(Query4Topics query4Topics);
+
+    Integer getIdTiItCountByUserId(Query4Topics query4Topics);
 }

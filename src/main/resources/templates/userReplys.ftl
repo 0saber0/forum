@@ -14,7 +14,7 @@
                         <td>
                             ${replys_list.inTime?string("MM/dd")}
                             评论了
-                            <a href="/homepage/${replys_user.id!}">${replys_list.username}</a>
+                            <a href="/homepage/${replys_list.userId!}">${replys_list.username}</a>
                             创建的话题 › <a href="/topic/${replys_list.topicId}">${replys_list.title}</a>
                         </td>
                     </tr>

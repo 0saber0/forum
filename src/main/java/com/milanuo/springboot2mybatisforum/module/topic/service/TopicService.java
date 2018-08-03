@@ -54,4 +54,12 @@ public class TopicService {
     public void save(Topic topic) {
         topicMapper.insertSelective(topic);
     }
+
+    public List<Topic> getIdTiItByUserId(Query4Topics query4Topics){
+        return topicMapper.getIdTiItByUserId(query4Topics);
+    }
+
+    public Integer getIdTiItCountByUserId(Query4Topics query4Topics){
+        return topicMapper.getIdTiItCountByUserId(query4Topics);
+    }
 }

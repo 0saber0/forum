@@ -231,7 +231,7 @@
         FROM topic
         WHERE topic.user_id = #{id}
         ORDER BY in_time DESC
-        limit #{pageNum},20
+        limit #{start},#{pageSize}
     </select>
 
     <select id="getUserTopicsCount" resultType="java.lang.Integer">
@@ -240,4 +240,17 @@
         WHERE topic.user_id = #{id}
     </select>
 
+    <select id="getIdTiItByUserId" resultMap="BaseResultMap">
+        SELECT id,title,in_time
+        FROM topic
+        WHERE user_id = #{id}
+        order by in_time desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="getIdTiItCountByUserId" resultType="java.lang.Integer">
+        SELECT COUNT(id)
+        FROM topic
+        WHERE user_id = #{id}
+    </select>
 </mapper>

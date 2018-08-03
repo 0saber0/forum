@@ -138,6 +138,8 @@
                 </div>
             </div>
             </#if>
+
+            <!--声望榜-->
             <div class="panel panel-default panel-prestige">
                 <div class="panel-heading">声望榜 <a href="#">TOP 100 &gt;&gt;</a></div>
                 <table class="table">
@@ -185,6 +187,8 @@
                     </tbody>
                 </table>
             </div>
+
+
         </div>
     </div>
 </div>

@@ -15,7 +15,7 @@ public class Query4Object implements Serializable {
     private Boolean zeroComment;//查询评论数为0的文章
 
     public String getKeyWord() {
-        return this.notEmpty(this.keyWord)?keyWord:null;
+        return this.notEmpty(this.keyWord) ? keyWord : null;
     }
 
     public void setKeyWord(String keyWord) {
@@ -79,10 +79,11 @@ public class Query4Object implements Serializable {
 
     /**
      * 判断字符串是否为空或空串
+     *
      * @param obj
      * @return
      */
-    private Boolean notEmpty(String obj){
-        return obj!=null&&!"".equals(obj.trim());
+    private Boolean notEmpty(String obj) {
+        return obj != null && !"".equals(obj.trim());
     }
 }

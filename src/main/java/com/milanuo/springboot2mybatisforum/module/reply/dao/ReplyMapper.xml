@@ -141,13 +141,15 @@
       ORDER BY in_time DESC
       limit 0,6
     </select>
+
     <select id="getUserReplysByUserId" resultMap="HomePageReplyResultMap" parameterType="java.lang.Integer">
-        SELECT reply.id id,reply.in_time in_time,reply.topic_id topic_id,topic.title title,reply.user_id user_id, (select username from forum.user where topic.user_id = user.id) username,reply.content content,(select count(id) from reply where reply.topic_id = topic.id) replyCount
+        SELECT reply.id id,reply.in_time in_time,reply.topic_id topic_id,topic.title title,topic.user_id user_id, (select username from forum.user where topic.user_id = user.id) username,reply.content content,(select count(id) from reply where reply.topic_id = topic.id) replyCount
         FROM reply,topic,user
         where reply.topic_id = topic.id and reply.user_id = user.id and reply.user_id = #{id}
         ORDER BY in_time DESC
-        limit #{pageNum},20
+        limit #{start},#{pageSize}
     </select>
+
     <select id="getUserReplysCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM reply,topic,user

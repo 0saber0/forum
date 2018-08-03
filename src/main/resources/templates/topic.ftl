@@ -27,6 +27,10 @@
                             </div>
                             <div class="media-body topic-media-body">
                                 <p class="gray">
+                                    <#if topicDetailPageResult.topic.good == 1>
+                                        <a href="/index?good=true"><span class="label label-success">精</span></a>
+                                        <span class="hidden-sm hidden-xs">•</span>
+                                    </#if>
                                     <span><a href="/homepage/${topicDetailPageResult.user.id}">${(topicDetailPageResult.user.username)!}</a></span>
                                     <span class="hidden-sm hidden-xs">•</span>
                                     <span class="hidden-sm hidden-xs"><a href="#">${(topicDetailPageResult.replyCount)!}个评论</a></span>
@@ -34,6 +38,10 @@
                                     <span class="hidden-sm hidden-xs">${(topicDetailPageResult.topic.view)!}次浏览</span>
                                     <span>•</span>
                                     <span>${topicDetailPageResult.topic.inTime?string("MM/dd")}</span>
+                                    <span>•</span>
+                                    <#list topicDetailPageResult.topic.tags?split(",") as tag>
+                                    <a href="/building"><span class="label label-success">${tag}</span></a>
+                                    </#list>
                                 </p>
                             </div>
                         </div>

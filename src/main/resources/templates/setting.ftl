@@ -10,8 +10,8 @@
                     <button class="list-group-item list-btn active" onclick="changeRightDiv(0)">个人设置</button>
                     <button class="list-group-item list-btn" onclick="changeRightDiv(1)">修改头像</button>
                     <button class="list-group-item list-btn" onclick="changeRightDiv(2)">修改密码</button>
-                    <button class="list-group-item list-btn" onclick="changeRightDiv(3)">用户令牌</button>
-                    <button class="list-group-item list-btn" onclick="changeRightDiv(4)">日志记录</button>
+                    <#--<button class="list-group-item list-btn" onclick="changeRightDiv(3)">用户令牌</button>-->
+                    <button class="list-group-item list-btn" onclick="changeRightDiv(3)">日志记录</button>
                 </div>
             </div>
         </div>
@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <!--用户令牌-->
+        <#--<!--用户令牌&ndash;&gt;
         <div class="col-md-9 right-div" style="padding-right: 5px;padding-left: 5px">
             <div class="panel panel-default">
                 <div class="panel-heading">用户令牌</div>
@@ -105,7 +105,7 @@
                     <p id="qrcode"><canvas width="256" height="256"></canvas></p>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <!--个人日志记录-->
         <div class="col-md-9 right-div" style="padding-right: 5px;padding-left: 5px">
@@ -120,22 +120,58 @@
                             <th>详情</th>
                             <th>添加日期</th>
                         </tr>
+                        <#list topicList as topic>
                         <tr>
-                            <td>166</td>
-                            <td>创建话题 <a href="" target="_blank">shi</a></td>
-                            <td>3天前</td>
+                            <td>${topic.id}</td>
+                            <td>创建话题 <a href="/topic/${topic.id}" target="_blank">${topic.title}</a></td>
+                            <td>${topic.inTime?string("MM/dd")}</td>
                         </tr>
+                        </#list>
                         </tbody></table>
                 </div>
 
-                <ul class="pagination pagination-sm hidden-xs hidden-sm hidden-md hidden-lg">
+                <div class="panel-body" style="padding: 0 15px;">
 
-                    <!--<li>上页</li>-->
+                    <ul class="pagination pagination-sm">
 
-                    <li class="active"><a class="disabled">1</a></li>
+                        <#if basePageResult.totalCount == 0>
+                            没有查询到符合条件的数据喔
+                        <#else >
+                            <#if basePageResult.pageNum == 1>
+                            <#else >
+                                        <li>
+                                            <a href="/user/setting?pageNum=1" aria-label="Previous">
+                                                <span aria-hidden="true"> << </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/user/setting?pageNum=${basePageResult.prevPage}" aria-label="Previous">
+                                                <span aria-hidden="true"> < </span>
+                                            </a>
+                                        </li>
+                            </#if>
+                            <#list 1..basePageResult.totalPage as n>
+                                        <li <#if basePageResult.pageNum==n>class="active" </#if> ><a href="/user/setting?pageNum=${n}">${n}</a></li>
+                            </#list>
+                            <#if basePageResult.pageNum == basePageResult.totalPage>
+                            <#else >
+                                        <li>
+                                            <a href="/user/setting?pageNum=${basePageResult.nextPage}" aria-label="Next">
+                                                <span aria-hidden="true"> > </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/user/setting?pageNum=${basePageResult.totalPage}" aria-label="Next">
+                                                <span aria-hidden="true"> >> </span>
+                                            </a>
+                                        </li>
+                            </#if>
+                        </#if>
 
-                    <!--<li>下页</li>-->
-                </ul>
+                    </ul>
+
+                </div>
+
             </div>
         </div>
 
