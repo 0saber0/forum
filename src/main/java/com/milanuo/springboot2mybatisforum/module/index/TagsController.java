@@ -39,7 +39,7 @@ public class TagsController {
 
         try {
             jedis = jedisPool.getResource();
-            Set<String> stringSet = jedis.hkeys("htags");
+            Set<String> stringSet = jedis.smembers("stags");
             ajaxResult.setDatas(stringSet.toArray());
             ajaxResult.setSuccessful(true);
             ajaxResult.setDescribe("查询成功");

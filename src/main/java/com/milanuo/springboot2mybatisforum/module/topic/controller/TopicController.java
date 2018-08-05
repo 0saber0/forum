@@ -87,11 +87,7 @@ public class TopicController {
                 strs = tags.split(",");
             }
             for (String str : strs) {
-                if(jedis.hexists("htags",str)){
-                    jedis.hincrBy("htags",str,1);
-                }else{
-                    jedis.hset("htags",str,"1");
-                }
+                jedis.sadd("stags",str);
             }
         } catch (Exception e) {
             e.printStackTrace();
