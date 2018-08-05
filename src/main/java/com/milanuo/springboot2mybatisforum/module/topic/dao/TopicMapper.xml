@@ -11,10 +11,23 @@
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="tags" jdbcType="VARCHAR" property="tags"/>
     </resultMap>
-    <resultMap id="WithReplyCountResultMap" type="com.milanuo.springboot2mybatisforum.core.PageResult.HomePageTopicResult">
+    <resultMap id="WithReplyCountResultMap"
+               type="com.milanuo.springboot2mybatisforum.core.PageResult.HomePageTopicResult">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="view" jdbcType="INTEGER" property="view"/>
+        <result column="replyCount" jdbcType="INTEGER" property="replyCount"/>
+    </resultMap>
+    <resultMap id="TagsTopicsResultMap"
+               type="com.milanuo.springboot2mybatisforum.core.PageResult.TagsTopicsPageResult">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="image" jdbcType="VARCHAR" property="image"/>
+        <result column="tags" jdbcType="VARCHAR" property="tags"/>
         <result column="view" jdbcType="INTEGER" property="view"/>
         <result column="replyCount" jdbcType="INTEGER" property="replyCount"/>
     </resultMap>
@@ -252,5 +265,19 @@
         SELECT COUNT(id)
         FROM topic
         WHERE user_id = #{id}
+    </select>
+
+    <select id="getTags" resultType="java.lang.String">
+        SELECT GROUP_CONCAT(tags separator ',')
+        FROM topic
+    </select>
+
+    <select id="getTopicsByTag" resultMap="TagsTopicsResultMap">
+        SELECT
+        id,title,user_id,tags,in_time,view,(select COUNT(*) from reply WHERE reply.topic_id = topic.id) replyCount,(select username from user where topic.user_id = user.id) username,(select image from user where topic.user_id = user.id) image
+        FROM topic
+        WHERE (topic.tags LIKE concat('%',',',#{tag}) or topic.tags LIKE concat(#{tag},',','%') or topic.tags LIKE concat(#{tag}))
+        ORDER BY in_time DESC
+        limit #{start},#{pageSize}
     </select>
 </mapper>

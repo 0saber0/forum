@@ -40,4 +40,8 @@ public class ReplyService {
     public Integer getUserReplysCount(Query4Topics query4Topics) {
         return replyMapper.getUserReplysCount(query4Topics);
     }
+
+    public void deleteByTopicId(Integer id) {
+        replyMapper.deleteByTopicId(id);
+    }
 }

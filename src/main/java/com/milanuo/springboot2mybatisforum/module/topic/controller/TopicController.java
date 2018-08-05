@@ -1,10 +1,13 @@
 package com.milanuo.springboot2mybatisforum.module.topic.controller;
 
+import com.milanuo.springboot2mybatisforum.core.CommomMethod.TagsHandle;
 import com.milanuo.springboot2mybatisforum.core.PageResult.ReplyResult;
 import com.milanuo.springboot2mybatisforum.core.PageResult.TopicDetailPageResult;
 import com.milanuo.springboot2mybatisforum.core.ajax.AjaxResult;
 import com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply;
 import com.milanuo.springboot2mybatisforum.module.reply.service.ReplyService;
+import com.milanuo.springboot2mybatisforum.module.tags.pojo.TagsTopics;
+import com.milanuo.springboot2mybatisforum.module.tags.service.TagsTopicsService;
 import com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic;
 import com.milanuo.springboot2mybatisforum.module.topic.service.TopicService;
 import com.milanuo.springboot2mybatisforum.module.user.pojo.User;
@@ -13,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -33,14 +38,20 @@ public class TopicController {
     @Autowired
     private ReplyService replyService;
 
+    @Autowired
+    private TagsHandle tagsHandle;
+
+    @Autowired
+    private TagsTopicsService tagsTopicsService;
+
     @GetMapping("{id}")
-    public String detail(@PathVariable Integer id , Model model){
+    public String detail(@PathVariable Integer id, Model model) {
 
         TopicDetailPageResult topicDetailPageResult = new TopicDetailPageResult();
         Topic topic = topicService.getTopicById(id);
         User user = userService.getOne(topic.getUserId());
         List<ReplyResult> replys = new ArrayList<>();
-        for (Reply reply:replyService.getReplyByTopicId(id)){
+        for (Reply reply : replyService.getReplyByTopicId(id)) {
             ReplyResult replyResult = new ReplyResult();
             User replyUser = userService.getOne(reply.getUserId());
             replyResult.setReply(reply);
@@ -51,11 +62,11 @@ public class TopicController {
         topicDetailPageResult.setUser(user);
         topicDetailPageResult.setReplys(replys);
         topicDetailPageResult.setReplyCount(replyService.getReplyCountByTopicId(id));
-        model.addAttribute("topicDetailPageResult",topicDetailPageResult);
+        model.addAttribute("topicDetailPageResult", topicDetailPageResult);
 
         //将该篇topic的view加1
         Topic topic1 = new Topic();
-        topic1.setView(topic.getView()+1);
+        topic1.setView(topic.getView() + 1);
         topic1.setId(id);
         topicService.update(topic1);
 
@@ -63,35 +74,105 @@ public class TopicController {
     }
 
     @RequestMapping("/create")
-    public String create(){
+    public String create() throws Exception {
+
+        JedisPool jedisPool;
+        Jedis jedis = null;
+        try {
+            jedisPool = new JedisPool("127.0.0.1", 6379);
+            jedis = jedisPool.getResource();
+            String tags = topicService.getTags();
+            String[] strs = null;
+            if (tags != null) {
+                strs = tags.split(",");
+            }
+            for (String str : strs) {
+                if(jedis.hexists("htags",str)){
+                    jedis.hincrBy("htags",str,1);
+                }else{
+                    jedis.hset("htags",str,"1");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
 
         return "createTopic";
     }
 
     @PostMapping("/save")
     @ResponseBody
-    public AjaxResult save(String title, String content, String tags, HttpSession session){
+    public AjaxResult save(String title, String content, String tags, HttpSession session) {
         AjaxResult ajaxResult = new AjaxResult();
         Topic topic = new Topic();
 
-        try{
+        try {
             topic.setContent(content);
             topic.setInTime(new Date());
             topic.setTitle(title);
             topic.setTags(tags);
-            topic.setUserId(((User)session.getAttribute("user0")).getId());
+            topic.setUserId(((User) session.getAttribute("user0")).getId());
             topic.setView(0);
             topicService.save(topic);
+            tagsHandle.tagsHandle(topic.getId(),tags);
             ajaxResult.setDatas(topic.getId());
             ajaxResult.setSuccessful(true);
             ajaxResult.setDescribe("保存成功");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             ajaxResult.setDescribe("保存失败，请重试");
             ajaxResult.setSuccessful(false);
         }
 
         return ajaxResult;
+    }
+
+    @GetMapping("/edit")
+    public String edit(Integer id,Model model){
+
+        Topic topic = topicService.getTopicById(id);
+        model.addAttribute("topic",topic);
+        return "editTopic";
+    }
+
+    @PostMapping("/editSave")
+    @ResponseBody
+    public AjaxResult editSave(Integer id,String title, String content, String tags, HttpSession session) {
+        AjaxResult ajaxResult = new AjaxResult();
+        Topic topic = new Topic();
+
+        try {
+            topic.setId(id);
+            topic.setContent(content);
+            topic.setTitle(title);
+            topic.setTags(tags);
+            topicService.update(topic);
+            tagsHandle.tagsHandle(topic.getId(),tags);
+            ajaxResult.setDatas(topic.getId());
+            ajaxResult.setSuccessful(true);
+            ajaxResult.setDescribe("保存成功");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            ajaxResult.setDescribe("修改失败，请重试");
+            ajaxResult.setSuccessful(false);
+        }
+
+        return ajaxResult;
+    }
+
+    @GetMapping("/delete")
+    public String delete(Integer id,Integer userId){
+
+        tagsTopicsService.deleteByTopicId(id);
+        topicService.deleteByTopicId(id);
+        replyService.deleteByTopicId(id);
+
+        return "forward:/homepage/"+userId;
     }
 }

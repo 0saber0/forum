@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.milanuo.springboot2mybatisforum.module.tags.dao.TagsMapper" >
+  <resultMap id="BaseResultMap" type="com.milanuo.springboot2mybatisforum.module.tags.pojo.Tags" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="describ" property="describ" jdbcType="VARCHAR" />
+  </resultMap>
+    <resultMap id="TagsWithNumResultMap" type="com.milanuo.springboot2mybatisforum.module.tags.pojo.TagsWithNum" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="tag" property="tag" jdbcType="VARCHAR" />
+        <result column="describ" property="describ" jdbcType="VARCHAR" />
+        <result column="num" property="num" jdbcType="INTEGER" />
+    </resultMap>
+  <sql id="Base_Column_List" >
+    id, tag, describ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tags
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tags
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.milanuo.springboot2mybatisforum.module.tags.pojo.Tags" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tags (tag, describ)
+    values (#{tag,jdbcType=VARCHAR}, #{describ,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.milanuo.springboot2mybatisforum.module.tags.pojo.Tags" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tags
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="describ != null" >
+        describ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="describ != null" >
+        #{describ,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.milanuo.springboot2mybatisforum.module.tags.pojo.Tags" >
+    update tags
+    <set >
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="describ != null" >
+        describ = #{describ,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.milanuo.springboot2mybatisforum.module.tags.pojo.Tags" >
+    update tags
+    set tag = #{tag,jdbcType=VARCHAR},
+      describ = #{describ,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectIdByTag" resultType="java.lang.Integer">
+    SELECT id
+    FROM tags
+    WHERE tag = #{tag}
+  </select>
+
+  <select id="getAllTags" resultMap="TagsWithNumResultMap">
+    SELECT id,tag,describ,(select count(tags_id) from tags_topics where tags_id = id) num
+    FROM tags
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="getAllTagsCount" resultType="java.lang.Integer">
+      SELECT
+      count(id)
+      FROM tags
+  </select>
+
+  <select id="getTagByTag" resultType="com.milanuo.springboot2mybatisforum.module.tags.pojo.TagsWithNum">
+    SELECT id,tag,describ,(select count(tags_id) from tags_topics where tags_id = id) num
+    FROM tags
+    WHERE tag = #{tag}
+  </select>
+
+  <select id="getTagByTagCount" resultType="java.lang.Integer">
+      SELECT
+      count(id)
+      FROM tags
+      WHERE tag = #{tag}
+  </select>
+
+</mapper>

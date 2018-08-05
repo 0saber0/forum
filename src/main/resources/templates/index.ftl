@@ -44,7 +44,7 @@
                                     <span>${list.topic.inTime?string("MM月dd日")}</span>
                                     <span>•</span>
                                     <#list list.topic.tags?split(",") as tag>
-                                    <a href="/building"><span class="label label-success">${tag}</span></a>
+                                    <a href="/tags/${tag}"><span class="label label-success">${tag}</span></a>
                                     </#list>
                                 </p>
                             </div>

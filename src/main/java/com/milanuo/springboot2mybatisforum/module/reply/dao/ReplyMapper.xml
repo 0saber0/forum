@@ -155,4 +155,9 @@
         FROM reply,topic,user
         where reply.topic_id = topic.id and reply.user_id = user.id and reply.user_id = #{id}
     </select>
+
+    <delete id="deleteByTopicId">
+        DELETE FROM reply
+        WHERE topic_id = #{id}
+    </delete>
 </mapper>

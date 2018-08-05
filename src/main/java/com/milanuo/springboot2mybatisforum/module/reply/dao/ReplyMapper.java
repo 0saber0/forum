@@ -32,4 +32,6 @@ public interface ReplyMapper {
     List<HomePageReplyResult> getUserReplysByUserId(Query4Topics query4Topics);
 
     Integer getUserReplysCount(Query4Topics query4Topics);
+
+    void deleteByTopicId(Integer id);
 }

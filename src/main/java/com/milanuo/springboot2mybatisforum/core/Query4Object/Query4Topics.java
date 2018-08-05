@@ -4,6 +4,15 @@ public class Query4Topics {
     private Integer id;
     private Integer pageNum;
     private Integer pageSize;
+    private String tag;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     public Integer getStart() {
         return (pageNum - 1) * pageSize;

@@ -1,5 +1,5 @@
 <#include "layout/layout.ftl">
-<@html page_title="创建话题" page_tab="">
+<@html page_title="编辑话题" page_tab="">
 <!--内容开始-->
 <div class="container" style="padding: 0 25px;">
     <form class="hidden-lg hidden-md" style="margin: 0 -10px;" role="search" action="/search" method="get">
@@ -12,14 +12,15 @@
         <div class="col-md-9">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a href="/">主页</a> / 发布话题
+                    <a href="/index">主页</a> / <a href="/homepage/${user0.id!}">${user0.username!}</a> / 编辑话题
                 </div>
                 <div class="panel-body">
                     <form id="form">
                         <!--标题-->
                         <div class="form-group">
                             <label for="title">标题</label>
-                            <input class="form-control" id="title" name="title" placeholder="标题" type="text">
+                            <input class="form-control" id="title" name="title" placeholder="标题" type="text"
+                                   value="${topic.title!}">
                         </div>
 
                         <!--内容-->
@@ -40,6 +41,12 @@
                                 var editor = new E('#editor');
                                 editor.create();
 
+                                function huixian() {
+                                    editor.txt.html("${topic.content!}");
+                                }
+
+                                huixian();
+
                             </script>
                         </div>
 
@@ -51,9 +58,12 @@
                             <label for="tag">标签</label>
                             <select id="tags" name="tags" multiple="multiple"
                                     class="form-control js-example-basic-multiple">
-
+                                    <#list topic.tags?split(",") as listTag>
+                                        <option value="${listTag}">${listTag}</option>
+                                    </#list>
                             </select>
                             <script>
+
                                 function optionList() {
                                     var html = "";
                                     $.ajax({
@@ -67,8 +77,19 @@
                                                 var list = data.datas;
 
                                                 for (var index = 0; index < list.length; index++) {
-                                                    html += "<option value= '" + list[index] + "'>" + list[index] + "</option>"
+                                                    html += "<option value= '" + list[index] +  " '>" + list[index] + "</option>"
                                                 }
+
+                                                $('#tags').append(html);
+
+                                                $("#tags").select2({
+                                                    placeholder: '请选择',//默认文字提示
+                                                    allowClear: true,
+                                                    tags: true//允许手动添加
+                                                });
+
+                                                $('#tags').val([<#list topic.tags?split(",") as taglist>'${taglist}',</#list>]).trigger('change');
+
                                             } else {
                                                 layer.msg(data.describe, {time: 2000, icon: 5, shift: 6}, function () {
 
@@ -76,20 +97,18 @@
                                             }
                                         }
                                     });
-                                    $('#tags').append(html);
+
                                 }
 
                                 optionList();
 
-                                $("#tags").select2({
-                                    placeholder: '请选择',//默认文字提示
-                                    tags: true//允许手动添加
-                                });
+
+
                             </script>
                         </div>
 
                         <button type="button" id="btn" class="btn btn-default">
-                            <span class="glyphicon glyphicon-send"></span> 发布
+                            <span class="glyphicon glyphicon-send"></span> 提交
                         </button>
                     </form>
                 </div>
@@ -131,12 +150,13 @@
                 var tags = tagsObject.toString();
                 var loadingCreate = null;
                 $.ajax({
-                    url: '/topic/save',
+                    url: '/topic/editSave',
                     type: 'post',
                     async: false,
                     cache: false,
                     dataType: 'json',
                     data: {
+                        "id": ${topic.id},
                         "title": title,
                         "content": content,
                         "tags": tags
@@ -147,7 +167,7 @@
                     success: function (data) {
                         layer.close(loadingCreate);
                         if (data.successful) {
-                            layer.msg("保存成功，跳转到详情页", {time: 1500, icon: 6, shift: 3}, function () {
+                            layer.msg("修改成功，跳转到详情页", {time: 1500, icon: 6, shift: 3}, function () {
                                 window.location.href = '/topic/' + data.datas;
                             });
                         } else {

@@ -1,6 +1,7 @@
 package com.milanuo.springboot2mybatisforum.module.topic.service;
 
 import com.milanuo.springboot2mybatisforum.core.PageResult.HomePageTopicResult;
+import com.milanuo.springboot2mybatisforum.core.PageResult.TagsTopicsPageResult;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Object;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.module.topic.dao.TopicMapper;
@@ -61,5 +62,17 @@ public class TopicService {
 
     public Integer getIdTiItCountByUserId(Query4Topics query4Topics){
         return topicMapper.getIdTiItCountByUserId(query4Topics);
+    }
+
+    public String getTags() {
+        return topicMapper.getTags();
+    }
+
+    public void deleteByTopicId(Integer id) {
+        topicMapper.deleteByPrimaryKey(id);
+    }
+
+    public List<TagsTopicsPageResult> getTopicsByTag(Query4Topics query4Topics) {
+        return topicMapper.getTopicsByTag(query4Topics);
     }
 }

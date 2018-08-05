@@ -29,7 +29,7 @@
                             <a href="/index">首页</a>
                         </li>
                         <li class="hidden-xs <#if page_tab == "tags">active</#if>">
-                            <a href="/building">标签</a>
+                            <a href="/tags/tagspage">标签</a>
                         </li>
                         <#if user0??>
                           <li class="hidden-md hidden-lg">
