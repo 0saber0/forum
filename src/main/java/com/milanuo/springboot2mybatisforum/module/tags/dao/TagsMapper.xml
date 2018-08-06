@@ -104,4 +104,8 @@
       WHERE tag = #{tag}
   </select>
 
+  <select id="getTags" resultType="java.lang.String">
+    SELECT GROUP_CONCAT(tag separator ',')
+    FROM tags
+  </select>
 </mapper>

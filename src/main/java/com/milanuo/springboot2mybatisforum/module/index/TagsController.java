@@ -34,23 +34,16 @@ public class TagsController {
     public AjaxResult gettags() {
 
         AjaxResult ajaxResult = new AjaxResult();
-        JedisPool jedisPool = new JedisPool("127.0.0.1", 6379);
-        Jedis jedis = null;
 
         try {
-            jedis = jedisPool.getResource();
-            Set<String> stringSet = jedis.smembers("stags");
-            ajaxResult.setDatas(stringSet.toArray());
+            String tagStr = tagsService.getTags();
+            ajaxResult.setDatas(tagStr.split(","));
             ajaxResult.setSuccessful(true);
             ajaxResult.setDescribe("查询成功");
         } catch (Exception e) {
             e.printStackTrace();
             ajaxResult.setDescribe("没有查询到数据");
             ajaxResult.setSuccessful(false);
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
         }
 
         return ajaxResult;

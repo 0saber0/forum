@@ -28,4 +28,6 @@ public interface TagsMapper {
     TagsWithNum getTagByTag(String tag);
 
     Integer getTagByTagCount(Query4Topics query4Topics);
+
+    String getTags();
 }

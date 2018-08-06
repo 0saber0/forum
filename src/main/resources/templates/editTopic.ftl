@@ -88,7 +88,7 @@
                                                     tags: true//允许手动添加
                                                 });
 
-                                                $('#tags').val([<#list topic.tags?split(",") as taglist>'${taglist}',</#list>]).trigger('change');
+                                                $('#tags').val([<#list topic.tags?split(",") as taglist>'${taglist!}',</#list>]).trigger('change');
 
                                             } else {
                                                 layer.msg(data.describe, {time: 2000, icon: 5, shift: 6}, function () {

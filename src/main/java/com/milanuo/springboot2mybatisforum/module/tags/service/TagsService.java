@@ -32,4 +32,8 @@ public class TagsService {
     public Integer getTagByTagCount(Query4Topics query4Topics) {
         return tagsMapper.getTagByTagCount(query4Topics);
     }
+
+    public String getTags() {
+        return tagsMapper.getTags();
+    }
 }

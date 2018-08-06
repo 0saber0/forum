@@ -1,5 +1,5 @@
 <#include "layout/layout.ftl">
-<@html page_title="" page_tab="">
+<@html page_title="${tagsWithNum.tag!}" page_tab="">
 <!--内容开始-->
 <div class="container" style="border-radius: 15px;margin-top: 10px">
     <div class="row">
@@ -10,7 +10,7 @@
                     <span class="label label-success">${tagsWithNum.tag!}</span>
                     <small>共有${tagsWithNum.num}篇话题</small>
                 </h4>
-                <small>${tagsWithNum.describ}</small>
+                <small>${tagsWithNum.describ!}</small>
                 <span></span>
             </div>
             <div class="divide"></div>

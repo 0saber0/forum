@@ -74,28 +74,7 @@ public class TopicController {
     }
 
     @RequestMapping("/create")
-    public String create() throws Exception {
-
-        JedisPool jedisPool;
-        Jedis jedis = null;
-        try {
-            jedisPool = new JedisPool("127.0.0.1", 6379);
-            jedis = jedisPool.getResource();
-            String tags = topicService.getTags();
-            String[] strs = null;
-            if (tags != null) {
-                strs = tags.split(",");
-            }
-            for (String str : strs) {
-                jedis.sadd("stags",str);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
+    public String create(){
 
         return "createTopic";
     }
@@ -114,7 +93,7 @@ public class TopicController {
             topic.setUserId(((User) session.getAttribute("user0")).getId());
             topic.setView(0);
             topicService.save(topic);
-            tagsHandle.tagsHandle(topic.getId(),tags);
+            tagsHandle.tagsHandle(topic.getId(), tags);
             ajaxResult.setDatas(topic.getId());
             ajaxResult.setSuccessful(true);
             ajaxResult.setDescribe("保存成功");
@@ -129,16 +108,16 @@ public class TopicController {
     }
 
     @GetMapping("/edit")
-    public String edit(Integer id,Model model){
+    public String edit(Integer id, Model model) {
 
         Topic topic = topicService.getTopicById(id);
-        model.addAttribute("topic",topic);
+        model.addAttribute("topic", topic);
         return "editTopic";
     }
 
     @PostMapping("/editSave")
     @ResponseBody
-    public AjaxResult editSave(Integer id,String title, String content, String tags, HttpSession session) {
+    public AjaxResult editSave(Integer id, String title, String content, String tags, HttpSession session) {
         AjaxResult ajaxResult = new AjaxResult();
         Topic topic = new Topic();
 
@@ -148,7 +127,7 @@ public class TopicController {
             topic.setTitle(title);
             topic.setTags(tags);
             topicService.update(topic);
-            tagsHandle.tagsHandle(topic.getId(),tags);
+            tagsHandle.tagsHandle(topic.getId(), tags);
             ajaxResult.setDatas(topic.getId());
             ajaxResult.setSuccessful(true);
             ajaxResult.setDescribe("保存成功");
@@ -163,12 +142,12 @@ public class TopicController {
     }
 
     @GetMapping("/delete")
-    public String delete(Integer id,Integer userId){
+    public String delete(Integer id, Integer userId) {
 
         tagsTopicsService.deleteByTopicId(id);
         topicService.deleteByTopicId(id);
         replyService.deleteByTopicId(id);
 
-        return "forward:/homepage/"+userId;
+        return "forward:/homepage/" + userId;
     }
 }
