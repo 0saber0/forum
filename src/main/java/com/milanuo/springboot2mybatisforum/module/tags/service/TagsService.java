@@ -2,6 +2,7 @@ package com.milanuo.springboot2mybatisforum.module.tags.service;
 
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.module.tags.dao.TagsMapper;
+import com.milanuo.springboot2mybatisforum.module.tags.pojo.Tags;
 import com.milanuo.springboot2mybatisforum.module.tags.pojo.TagsWithNum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,5 +36,17 @@ public class TagsService {
 
     public String getTags() {
         return tagsMapper.getTags();
+    }
+
+    public Tags getTagById(Integer id) {
+        return tagsMapper.selectByPrimaryKey(id);
+    }
+
+    public void updateTag(Tags tags) {
+        tagsMapper.updateByPrimaryKeySelective(tags);
+    }
+
+    public void deleteTagById(Integer id) {
+        tagsMapper.deleteByPrimaryKey(id);
     }
 }

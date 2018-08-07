@@ -11,6 +11,16 @@
                extends="BaseResultMap">
         <result column="content" property="content" jdbcType="LONGVARCHAR"/>
     </resultMap>
+    <resultMap id="ReplyAdmin"
+               type="com.milanuo.springboot2mybatisforum.module.reply.pojo.ReplyAdmin">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="in_time" property="inTime" jdbcType="TIMESTAMP"/>
+        <result column="topic_id" property="topicId" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+    </resultMap>
     <resultMap id="HomePageReplyResultMap"
                type="com.milanuo.springboot2mybatisforum.core.PageResult.HomePageReplyResult">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -159,5 +169,27 @@
     <delete id="deleteByTopicId">
         DELETE FROM reply
         WHERE topic_id = #{id}
+    </delete>
+
+    <select id="getAllReply" resultMap="ReplyAdmin">
+        SELECT id,topic_id,user_id,in_time,content,(select title from topic where topic.id = reply.topic_id) title,(select username from user where user.id = reply.user_id) username
+        FROM reply
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="getAllReplyCount" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM reply
+    </select>
+
+    <select id="getReplyAdmin" resultMap="ReplyAdmin">
+        SELECT id,topic_id,user_id,in_time,content,(select title from topic where topic.id = reply.topic_id) title,(select username from user where user.id = reply.user_id) username
+        FROM reply
+        WHERE id = #{id}
+    </select>
+
+    <delete id="deleByUserId" >
+        DELETE FROM reply
+        WHERE user_id = #{id}
     </delete>
 </mapper>

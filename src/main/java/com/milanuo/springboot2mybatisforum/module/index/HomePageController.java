@@ -3,7 +3,6 @@ package com.milanuo.springboot2mybatisforum.module.index;
 import com.milanuo.springboot2mybatisforum.core.PageResult.HomePageReplyResult;
 import com.milanuo.springboot2mybatisforum.core.PageResult.HomePageTopicResult;
 import com.milanuo.springboot2mybatisforum.module.reply.service.ReplyService;
-import com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic;
 import com.milanuo.springboot2mybatisforum.module.topic.service.TopicService;
 import com.milanuo.springboot2mybatisforum.module.user.pojo.User;
 import com.milanuo.springboot2mybatisforum.module.user.service.UserService;
@@ -39,6 +38,6 @@ public class HomePageController {
         model.addAttribute("homepage_topic_list",homepage_topic_list);
         model.addAttribute("homepage_reply",homepage_reply);
 
-        return "homepage";
+        return "front/homepage";
     }
 }

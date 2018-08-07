@@ -8,6 +8,6 @@ public class RegisterController {
 
     @RequestMapping("/register")
     public String index(){
-        return "register";
+        return "front/register";
     }
 }

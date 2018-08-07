@@ -6,7 +6,6 @@ import com.milanuo.springboot2mybatisforum.core.PageResult.TopicDetailPageResult
 import com.milanuo.springboot2mybatisforum.core.ajax.AjaxResult;
 import com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply;
 import com.milanuo.springboot2mybatisforum.module.reply.service.ReplyService;
-import com.milanuo.springboot2mybatisforum.module.tags.pojo.TagsTopics;
 import com.milanuo.springboot2mybatisforum.module.tags.service.TagsTopicsService;
 import com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic;
 import com.milanuo.springboot2mybatisforum.module.topic.service.TopicService;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -70,13 +67,13 @@ public class TopicController {
         topic1.setId(id);
         topicService.update(topic1);
 
-        return "topic";
+        return "front/topic/topic";
     }
 
     @RequestMapping("/create")
     public String create(){
 
-        return "createTopic";
+        return "front/topic/createTopic";
     }
 
     @PostMapping("/save")
@@ -112,12 +109,12 @@ public class TopicController {
 
         Topic topic = topicService.getTopicById(id);
         model.addAttribute("topic", topic);
-        return "editTopic";
+        return "front/topic/editTopic";
     }
 
     @PostMapping("/editSave")
     @ResponseBody
-    public AjaxResult editSave(Integer id, String title, String content, String tags, HttpSession session) {
+    public AjaxResult editSave(Integer id, String title, String content, String tags) {
         AjaxResult ajaxResult = new AjaxResult();
         Topic topic = new Topic();
 

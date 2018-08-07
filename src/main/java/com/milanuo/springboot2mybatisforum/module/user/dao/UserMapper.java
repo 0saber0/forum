@@ -1,6 +1,9 @@
 package com.milanuo.springboot2mybatisforum.module.user.dao;
 
+import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.module.user.pojo.User;
+
+import java.util.List;
 
 
 public interface UserMapper {
@@ -19,4 +22,8 @@ public interface UserMapper {
     User doLogin(User user);
 
     User getUserByUserName(String username);
+
+    List<User> getAllUser(Query4Topics query4Topics);
+
+    Integer getAllUserCount(Query4Topics query4Topics);
 }

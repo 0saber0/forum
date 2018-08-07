@@ -5,6 +5,7 @@ import com.milanuo.springboot2mybatisforum.core.PageResult.TagsTopicsPageResult;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Object;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic;
+import com.milanuo.springboot2mybatisforum.module.topic.pojo.TopicAddU;
 
 import java.util.List;
 
@@ -42,4 +43,10 @@ public interface TopicMapper {
     String getTags();
 
     List<TagsTopicsPageResult> getTopicsByTag(Query4Topics query4Topics);
+
+    List<TopicAddU> getAllTopic(Query4Topics query4Topics);
+
+    Integer getAllTopicCount(Query4Topics query4Topics);
+
+    List<Integer> getAllTopicIdByUserId(Integer id);
 }

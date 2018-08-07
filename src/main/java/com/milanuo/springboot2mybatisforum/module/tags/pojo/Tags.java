@@ -29,7 +29,7 @@ public class Tags implements Serializable{
         return describ;
     }
 
-    public void setDescrib(String describe) {
+    public void setDescrib(String describ) {
         this.describ = describ == null ? null : describ.trim();
     }
 }

@@ -1,7 +1,6 @@
 package com.milanuo.springboot2mybatisforum.module.index;
 
 import com.milanuo.springboot2mybatisforum.core.PageResult.BasePageResult;
-import com.milanuo.springboot2mybatisforum.core.PageResult.HomePageTopicResult;
 import com.milanuo.springboot2mybatisforum.core.PageResult.TagsTopicsPageResult;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.core.ajax.AjaxResult;
@@ -12,11 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/tags")
@@ -53,7 +49,9 @@ public class TagsController {
     public String tagspage(Integer pageNum, Model model){
 
         Query4Topics query4Topics = new Query4Topics();
-        if(pageNum==null){
+        if(pageNum!=null){
+            query4Topics.setPageNum(pageNum);
+        }else {
             query4Topics.setPageNum(1);
         }
         query4Topics.setPageSize(16);
@@ -66,7 +64,7 @@ public class TagsController {
         model.addAttribute("basePageResult",basePageResult);
 
 
-        return "tagspage";
+        return "front/tag/tagspage";
     }
 
     @GetMapping("{tag}")
@@ -92,7 +90,7 @@ public class TagsController {
 
 
 
-        return "tagsTopics";
+        return "front/tag/tagsTopics";
     }
 
 }

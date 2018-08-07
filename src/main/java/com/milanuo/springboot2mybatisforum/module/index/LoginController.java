@@ -12,6 +12,6 @@ public class LoginController {
     @RequestMapping("/login")
     public String login(HttpSession session){
         session.invalidate();
-        return "login";
+        return "front/login";
     }
 }

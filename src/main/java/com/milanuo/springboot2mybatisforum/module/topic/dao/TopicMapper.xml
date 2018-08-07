@@ -11,6 +11,17 @@
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="tags" jdbcType="VARCHAR" property="tags"/>
     </resultMap>
+    <resultMap id="BaseResultMapAddUserName" type="com.milanuo.springboot2mybatisforum.module.topic.pojo.TopicAddU">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="good" jdbcType="TINYINT" property="good"/>
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="top" jdbcType="TINYINT" property="top"/>
+        <result column="view" jdbcType="INTEGER" property="view"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="tags" jdbcType="VARCHAR" property="tags"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+    </resultMap>
     <resultMap id="WithReplyCountResultMap"
                type="com.milanuo.springboot2mybatisforum.core.PageResult.HomePageTopicResult">
         <id column="id" jdbcType="INTEGER" property="id"/>
@@ -279,5 +290,22 @@
         WHERE (topic.tags LIKE concat('%',',',#{tag}) or topic.tags LIKE concat(#{tag},',','%') or topic.tags LIKE concat(#{tag}))
         ORDER BY in_time DESC
         limit #{start},#{pageSize}
+    </select>
+
+    <select id="getAllTopic" resultMap="BaseResultMapAddUserName">
+        SELECT <include refid="Base_Column_List"/>,(select username from user where user.id = topic.user_id) username
+        FROM topic
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="getAllTopicCount" resultType="java.lang.Integer">
+        SELECT COUNT(id)
+        FROM topic
+    </select>
+
+    <select id="getAllTopicIdByUserId" resultType="java.lang.Integer">
+        SELECT id
+        FROM topic
+        WHERE user_id = #{id}
     </select>
 </mapper>

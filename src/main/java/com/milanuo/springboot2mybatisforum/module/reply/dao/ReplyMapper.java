@@ -3,6 +3,7 @@ package com.milanuo.springboot2mybatisforum.module.reply.dao;
 import com.milanuo.springboot2mybatisforum.core.PageResult.HomePageReplyResult;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.module.reply.pojo.Reply;
+import com.milanuo.springboot2mybatisforum.module.reply.pojo.ReplyAdmin;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,4 +35,12 @@ public interface ReplyMapper {
     Integer getUserReplysCount(Query4Topics query4Topics);
 
     void deleteByTopicId(Integer id);
+
+    List<ReplyAdmin> getAllReply(Query4Topics query4Topics);
+
+    Integer getAllReplyCount(Query4Topics query4Topics);
+
+    ReplyAdmin getReplyAdmin(Integer id);
+
+    void deleByUserId(Integer id);
 }

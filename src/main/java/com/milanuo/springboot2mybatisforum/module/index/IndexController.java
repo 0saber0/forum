@@ -57,6 +57,6 @@ public class IndexController {
 
         model.addAttribute("indexList",indexList);
 
-        return "index";
+        return "front/index";
     }
 }

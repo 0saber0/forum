@@ -6,6 +6,7 @@ import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Object;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.module.topic.dao.TopicMapper;
 import com.milanuo.springboot2mybatisforum.module.topic.pojo.Topic;
+import com.milanuo.springboot2mybatisforum.module.topic.pojo.TopicAddU;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,5 +75,17 @@ public class TopicService {
 
     public List<TagsTopicsPageResult> getTopicsByTag(Query4Topics query4Topics) {
         return topicMapper.getTopicsByTag(query4Topics);
+    }
+
+    public List<TopicAddU> getAllTopic(Query4Topics query4Topics) {
+        return topicMapper.getAllTopic(query4Topics);
+    }
+
+    public Integer getAllTopicCount(Query4Topics query4Topics) {
+        return topicMapper.getAllTopicCount(query4Topics);
+    }
+
+    public List<Integer> getAllTopicIdByUserId(Integer id) {
+        return topicMapper.getAllTopicIdByUserId(id);
     }
 }

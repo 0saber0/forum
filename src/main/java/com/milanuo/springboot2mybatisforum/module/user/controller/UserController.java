@@ -4,7 +4,6 @@ import com.milanuo.springboot2mybatisforum.core.MyProps.MyProps;
 import com.milanuo.springboot2mybatisforum.core.PageResult.BasePageResult;
 import com.milanuo.springboot2mybatisforum.core.PageResult.HomePageReplyResult;
 import com.milanuo.springboot2mybatisforum.core.PageResult.HomePageTopicResult;
-import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Object;
 import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.core.ajax.AjaxResult;
 import com.milanuo.springboot2mybatisforum.module.reply.service.ReplyService;
@@ -65,9 +64,14 @@ public class UserController {
             if (indexCode.equalsIgnoreCase(code)) {
                 User user1 = userService.doLogin(user);
                 if (user1 != null) {
-                    request.getSession().setAttribute("user0", user1);
-                    result.setSuccessful(true);
-                    result.setDescribe("登录成功");
+                    if ("normal".equals(user1.getState())) {
+                        request.getSession().setAttribute("user0", user1);
+                        result.setSuccessful(true);
+                        result.setDescribe("登录成功");
+                    } else {
+                        result.setSuccessful(false);
+                        result.setDescribe("登录失败，该用户已被禁用，请联系管理员");
+                    }
                 } else {
                     result.setSuccessful(false);
                     result.setDescribe("用户名或密码错误，请检查后重新登录");
@@ -95,6 +99,7 @@ public class UserController {
         user.setEmail(email);
         user.setImage("1.jpg");
         user.setInTime(new Date());
+        user.setState("normal");
         String indexCode = (String) request.getSession().getAttribute("index_code");
 
         try {
@@ -116,43 +121,43 @@ public class UserController {
     }
 
     @GetMapping("/setting")
-    public String setting(Integer pageNum,Model model,HttpSession session){
+    public String setting(Integer pageNum, Model model, HttpSession session) {
         Query4Topics query4Topics = new Query4Topics();
-        query4Topics.setId(((User)session.getAttribute("user0")).getId());
-        if(pageNum!=null){
+        query4Topics.setId(((User) session.getAttribute("user0")).getId());
+        if (pageNum != null) {
             query4Topics.setPageNum(pageNum);
-        }else {
+        } else {
             query4Topics.setPageNum(1);
         }
         query4Topics.setPageSize(20);
         List<Topic> topicList = topicService.getIdTiItByUserId(query4Topics);
-        model.addAttribute("topicList",topicList);
+        model.addAttribute("topicList", topicList);
         BasePageResult basePageResult = new BasePageResult();
         basePageResult.setTotalCount(topicService.getIdTiItCountByUserId(query4Topics));
         basePageResult.setPageSize(query4Topics.getPageSize());
         basePageResult.setPageNum(query4Topics.getPageNum());
-        model.addAttribute("basePageResult",basePageResult);
-        return "setting";
+        model.addAttribute("basePageResult", basePageResult);
+        return "front/setting";
     }
 
     @PostMapping("/update")
     @ResponseBody
-    public AjaxResult update(Integer id,String email,String intro , HttpSession session){
+    public AjaxResult update(Integer id, String email, String intro, HttpSession session) {
 
         AjaxResult result = new AjaxResult();
         User user = new User();
         user.setId(id);
         user.setEmail(email);
         user.setIntro(intro);
-        try{
+        try {
             userService.update(user);
             result.setSuccessful(true);
-            User user1 = (User)session.getAttribute("user0");
+            User user1 = (User) session.getAttribute("user0");
             user1.setEmail(email);
             user1.setIntro(intro);
-            session.setAttribute("user0",user1);
+            session.setAttribute("user0", user1);
             result.setDescribe("修改成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             result.setSuccessful(false);
             result.setDescribe("修改失败，请重试");
@@ -162,26 +167,26 @@ public class UserController {
 
     @PostMapping("/updatePassword")
     @ResponseBody
-    public AjaxResult updatePassword(Integer id,String oldPassword,String newPassword, HttpSession session){
+    public AjaxResult updatePassword(Integer id, String oldPassword, String newPassword, HttpSession session) {
 
         AjaxResult result = new AjaxResult();
-        User user1 = (User)session.getAttribute("user0");
-        if(oldPassword.equals(user1.getPassword())){
+        User user1 = (User) session.getAttribute("user0");
+        if (oldPassword.equals(user1.getPassword())) {
             User user = new User();
             user.setId(id);
             user.setPassword(newPassword);
-            try{
+            try {
                 userService.update(user);
                 result.setSuccessful(true);
                 user1.setPassword(newPassword);
-                session.setAttribute("user0",user1);
+                session.setAttribute("user0", user1);
                 result.setDescribe("修改成功");
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 result.setSuccessful(false);
                 result.setDescribe("修改失败，请重试");
             }
-        }else{
+        } else {
             result.setSuccessful(false);
             result.setDescribe("原密码错误，请重试");
         }
@@ -190,7 +195,7 @@ public class UserController {
     }
 
     @GetMapping("{username}/topics")
-    public String userTopics(@PathVariable String username,Integer pageNum,Model model){
+    public String userTopics(@PathVariable String username, Integer pageNum, Model model) {
         User topics_user = userService.getUserByUserName(username);
         Query4Topics query4Topics = new Query4Topics();
         query4Topics.setId(topics_user.getId());
@@ -201,14 +206,14 @@ public class UserController {
         basePageResult.setPageNum(pageNum);
         basePageResult.setPageSize(query4Topics.getPageSize());
         basePageResult.setTotalCount(topicService.getUserTopicsCount(query4Topics));
-        model.addAttribute("topics_user",topics_user);
-        model.addAttribute("user_topics_list",user_topics_list);
-        model.addAttribute("basePageResult",basePageResult);
-        return "userTopics";
+        model.addAttribute("topics_user", topics_user);
+        model.addAttribute("user_topics_list", user_topics_list);
+        model.addAttribute("basePageResult", basePageResult);
+        return "front/user/userTopics";
     }
 
     @GetMapping("{username}/replys")
-    public String userReplys(@PathVariable String username,Integer pageNum,Model model){
+    public String userReplys(@PathVariable String username, Integer pageNum, Model model) {
 
         User replys_user = userService.getUserByUserName(username);
         Query4Topics query4Topics = new Query4Topics();
@@ -220,38 +225,38 @@ public class UserController {
         basePageResult.setPageNum(pageNum);
         basePageResult.setPageSize(query4Topics.getPageSize());
         basePageResult.setTotalCount(replyService.getUserReplysCount(query4Topics));
-        model.addAttribute("replys_user",replys_user);
-        model.addAttribute("user_replys_list",user_replys_list);
-        model.addAttribute("basePageResult",basePageResult);
-        return "userReplys";
+        model.addAttribute("replys_user", replys_user);
+        model.addAttribute("user_replys_list", user_replys_list);
+        model.addAttribute("basePageResult", basePageResult);
+        return "front/user/userReplys";
     }
 
     @PostMapping("/image")
-    public String image(@RequestParam(value="file",required=false) MultipartFile file,
-                              HttpServletRequest request,Model model)throws Exception{
+    public String image(@RequestParam(value = "file", required = false) MultipartFile file,
+                        HttpServletRequest request, Model model) throws Exception {
         //基本表单
 
         //获得物理路径webapp所在路径
-        String photoPath="";
+        String photoPath = "";
         String path = "";
-        if(!file.isEmpty()){
+        if (!file.isEmpty()) {
             //生成uuid作为文件名称
-            String uuid = UUID.randomUUID().toString().replaceAll("-","").substring(0,19);
+            String uuid = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 19);
             //获得文件类型（可以判断如果不是图片，禁止上传）
-            String contentType=file.getContentType();
+            String contentType = file.getContentType();
             //获得文件后缀名称
-            String imageName=contentType.substring(contentType.indexOf("/")+1);
+            String imageName = contentType.substring(contentType.indexOf("/") + 1);
             //地址
-            path=myProps.getPhotoPath()+uuid+"."+imageName;
+            path = myProps.getPhotoPath() + uuid + "." + imageName;
             file.transferTo(new File(path));
-            photoPath = uuid+"."+imageName;
+            photoPath = uuid + "." + imageName;
         }
         User user = new User();
-        user.setId(((User)(request.getSession().getAttribute("user0"))).getId());
+        user.setId(((User) (request.getSession().getAttribute("user0"))).getId());
         user.setImage(photoPath);
         userService.update(user);
 
-        return "redirect:/homepage/"+((User)(request.getSession().getAttribute("user0"))).getId();
+        return "redirect:/homepage/" + ((User) (request.getSession().getAttribute("user0"))).getId();
     }
 
 }

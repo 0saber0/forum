@@ -8,6 +8,6 @@ public class BuildingController {
 
     @RequestMapping("/building")
     public String index(){
-        return "building";
+        return "front/building";
     }
 }

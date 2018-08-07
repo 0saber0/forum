@@ -1,5 +1,6 @@
 package com.milanuo.springboot2mybatisforum.module.user.service;
 
+import com.milanuo.springboot2mybatisforum.core.Query4Object.Query4Topics;
 import com.milanuo.springboot2mybatisforum.module.user.dao.UserMapper;
 import com.milanuo.springboot2mybatisforum.module.user.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,17 @@ public class UserService {
 
     public User getUserByUserName(String username) {
         return userMapper.getUserByUserName(username);
+    }
+
+    public List<User> getAllUser(Query4Topics query4Topics) {
+        return userMapper.getAllUser(query4Topics);
+    }
+
+    public Integer getAllUserCount(Query4Topics query4Topics) {
+        return userMapper.getAllUserCount(query4Topics);
+    }
+
+    public void delete(Integer id) {
+        userMapper.deleteByPrimaryKey(id);
     }
 }
