@@ -21,7 +21,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/user")
-public class AdminUserController {
+public class UserAdminController {
 
     @Autowired
     private UserService userService;
@@ -157,10 +157,10 @@ public class AdminUserController {
             }
             userService.update(user);
             ajaxResult.setSuccessful(true);
-            ajaxResult.setDescribe("启用成功");
+            ajaxResult.setDescribe("修改成功");
         } catch (Exception e) {
             e.printStackTrace();
-            ajaxResult.setDescribe("启用失败，请重试");
+            ajaxResult.setDescribe("修改失败，请重试");
             ajaxResult.setSuccessful(false);
         }
 

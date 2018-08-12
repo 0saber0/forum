@@ -38,10 +38,10 @@
               <td>${reply.username!}</td>
               <td>${reply.inTime?string("yyyy/MM/dd")}</td>
               <td>
-                <#if true>
+                <#if shi.allGranted('评论编辑许可')>
                   <a href="/admin/comment/editPage?id=${reply.id}" class="btn btn-sm btn-warning">编辑</a>
                 </#if>
-                <#if true>
+                <#if shi.allGranted('评论删除许可')>
                   <button onclick="deleteBtn('${reply.id}')" class="btn btn-sm btn-danger">删除</button>
                 </#if>
               </td>

@@ -30,7 +30,7 @@
           </tr>
           </thead>
           <tbody>
-          <#if true>
+          <#if shi.allGranted('用户查看许可')>
           <#list userList as user>
           <tr <#if user.state == 'disable'> class="danger"</#if>>
             <td>${user.id}</td>
@@ -45,16 +45,16 @@
             </td>
             <td>${user.inTime?string("yyyy/MM/dd")}</td>
             <td>
-                <#if true>
+                <#if shi.allGranted('用户禁用许可')>
                   <button onclick="blockBtn('${user.id}')" class="btn btn-sm btn-warning">禁用</button>
                 </#if>
-                <#if true>
+                <#if shi.allGranted('用户启用许可')>
                   <button onclick="useringBtn('${user.id}')" class="btn btn-sm btn-warning">启用</button>
                 </#if>
-                <#if true>
+                <#if shi.allGranted('用户编辑许可')>
                   <a href="/admin/user/editPage?id=${user.id}" class="btn btn-sm btn-warning">编辑</a>
                 </#if>
-                <#if true>
+                <#if shi.allGranted('用户删除许可')>
                   <button onclick="deleteBtn('${user.id}')" class="btn btn-sm btn-danger">删除</button>
                 </#if>
             </td>

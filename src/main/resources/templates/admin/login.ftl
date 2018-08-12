@@ -33,13 +33,13 @@
   <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">密拉诺管理平台登录</p>
-    <form id="form" action="/admin/adminLogin" method="post">
+    <form id="form" action="/shiro/login" method="post">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" id="username" name="username" placeholder="用户名">
+        <input type="text" class="form-control" id="username" name="username" placeholder="用户名" <#if adminLoginErrorMsg??>value="${adminLoginErrorMsg.username!}" </#if> >
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" id="password" name="password" placeholder="密码">
+        <input type="password" class="form-control" id="password" name="password" placeholder="密码" <#if adminLoginErrorMsg??>value="${adminLoginErrorMsg.password!}" </#if>>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="form-group">
@@ -52,8 +52,8 @@
       </div>
       <div class="row">
         <div class="col-xs-8">
-          <#if SPRING_SECURITY_LAST_EXCEPTION??>
-            <div class="text-red">${(SPRING_SECURITY_LAST_EXCEPTION.message)!}</div>
+          <#if adminLoginErrorMsg??>
+            <div class="text-red">${(adminLoginErrorMsg.msg)!}</div>
           </#if>
         </div>
         <!-- /.col -->

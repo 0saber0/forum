@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.milanuo.springboot2mybatisforum.module.web.dao.UserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.milanuo.springboot2mybatisforum.module.web.pojo.UserRole" >
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.milanuo.springboot2mybatisforum.module.web.pojo.UserRole" >
+    insert into userInfo_sysRole (user_id, role_id)
+    values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.milanuo.springboot2mybatisforum.module.web.pojo.UserRole" >
+    insert into userInfo_sysRole
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getRolesIdByUserId" resultType="java.lang.Integer">
+    SELECT role_id
+    FROM userInfo_sysRole
+    WHERE user_id = #{id}
+  </select>
+
+  <delete id="deleteByUserInfoId">
+    DELETE FROM userInfo_sysRole
+    WHERE user_id = #{id}
+  </delete>
+</mapper>

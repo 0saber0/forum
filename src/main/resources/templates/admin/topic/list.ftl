@@ -46,16 +46,16 @@
               </td>
               <td>${topic.inTime?string("yyyy/MM/dd")}</td>
               <td>
-                <#if true>
+                <#if shi.allGranted('话题置顶许可')>
                   <button onclick="actionBtn('${topic.id}', 'top')" class="btn btn-sm btn-warning">置顶</button>
                 </#if>
-                <#if true>
+                <#if shi.allGranted('话题升精许可')>
                   <button onclick="actionBtn('${topic.id}', 'good')" class="btn btn-sm btn-warning">加精</button>
                 </#if>
-                <#if true>
+                <#if shi.allGranted('话题编辑许可')>
                   <a href="/admin/topic/editPage?id=${topic.id}" class="btn btn-sm btn-warning">编辑</a>
                 </#if>
-                <#if true>
+                <#if shi.allGranted('话题删除许可')>
                   <button onclick="actionBtn('${topic.id}', 'delete')" class="btn btn-sm btn-danger">删除</button>
                 </#if>
               </td>

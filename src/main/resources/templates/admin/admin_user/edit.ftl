@@ -23,7 +23,7 @@
             <form id="form">
               <div class="form-group">
                 <label>用户名</label>
-                <input type="text" id="username" value="${adminUser.username!}" class="form-control" placeholder="用户名">
+                <input type="text" id="username" value="${userInfo.username!}" class="form-control" placeholder="用户名">
               </div>
               <div class="form-group">
                 <label>旧密码</label>
@@ -35,9 +35,9 @@
               </div>
               <div class="form-group">
                 <label>角色</label>
-                <#list roles as role>
-                  <input type="radio" name="roleId" value="${role.id}" id="role_${role.id}" <#if role.id == adminUser.roleId>checked</#if>>&nbsp;
-                  <label for="role_${role.id}">${role.name!}</label>
+                <#list sysRoleList as role>
+                  <input type="checkbox" name="roleId" value="${role.id}" id="role_${role.id}" <#list userRolesIds as roleId><#if role.id == roleId>checked</#if></#list>>&nbsp;
+                  <label for="role_${role.id}" title="${role.description!}">${role.role!}</label>&nbsp;&nbsp;&nbsp;&nbsp;
                 </#list>
               </div>
               <button type="submit" class="btn btn-sm btn-primary">保存</button>
@@ -48,6 +48,17 @@
     </div>
   </section>
 <script>
+
+    function getTheCheckBoxValue() {
+        var test = $("input[name='roleId']:checked");
+        var checkBoxValue = "";
+        test.each(function () {
+            checkBoxValue += $(this).val() + ",";
+        })
+        checkBoxValue = checkBoxValue.substring(0, checkBoxValue.length - 1);
+        return checkBoxValue;
+    }
+
   $(function() {
     $('input').iCheck({
       checkboxClass: 'icheckbox_square-blue',
@@ -58,7 +69,7 @@
       var username = $("#username").val();
       var oldPassword = $("#oldPassword").val();
       var password = $("#password").val();
-      var roleId = $("input[name='roleId']:checked").val();
+      var roleId = getTheCheckBoxValue();
       if(!username) {
         toast('用户名不能为空');
         return false;
@@ -70,20 +81,20 @@
         type: 'post',
         dataType: 'json',
         data: {
-          id: '${adminUser.id}',
+          id: '${userInfo.id}',
           username: username,
           oldPassword: oldPassword,
           password: password,
           roleId: roleId
         },
         success: function(data) {
-          if(data.code === 200) {
-            toast('修改成功');
+          if(data.successful) {
+            toast('编辑成功');
             setTimeout(function() {
               window.location.href = '/admin/admin_user/list';
             }, 1000);
           } else {
-            toast(data.description);
+            toast(data.describe);
           }
         }
       })

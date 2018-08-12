@@ -20,13 +20,31 @@
       <div class="box-body">
         <div class="row">
           <div class="col-sm-3">
-            <div id="tree"></div>
+              <div id="tree">
+                  <div style="text-align: center">
+                      <p style="font-weight: 700;font-size: 16px">权限分配</p>
+                  </div>
+
+
+                <#list sysPermissionIdNameList as per>
+                <div style="float: left;width: 115px">
+                    <input type="checkbox" name="perId" value="${per.id}" id="per_${per.id}">&nbsp;
+                    <label for="per_${per.id}">${per.name!}</label>
+                </div>
+                </#list>
+
+
+              </div>
           </div>
           <div class="col-sm-9">
             <form id="form">
               <div class="form-group">
                 <label>角色名</label>
-                <input type="text" id="name" class="form-control" placeholder="角色名">
+                <input type="text" id="role" class="form-control" placeholder="角色名">
+              </div>
+              <div class="form-group">
+                <label>角色描述</label>
+                <textarea name="description" id="description" rows="5" class="form-control" placeholder="最好不超过50个字"></textarea>
               </div>
               <button type="submit" class="btn btn-sm btn-primary">保存</button>
             </form>
@@ -36,96 +54,49 @@
     </div>
   </section>
 <script>
-  var data = ${data!};
-  var nodeIds = [];
-  $(function() {
-    var tree = $('#tree');
-    tree.treeview({
-      data: data,
-      levels: 3,
-      showCheckbox: true,
-    });
 
-    tree.on('nodeChecked', onNodeChecked);
-    tree.on('nodeUnchecked', onNodeUnChecked);
+    /*获取checkbox的值*/
+    function getTheCheckBoxValue() {
+        var test = $("input[name='perId']:checked");
+        var checkBoxValue = "";
+        test.each(function () {
+            checkBoxValue += $(this).val() + ",";
+        })
+        checkBoxValue = checkBoxValue.substring(0, checkBoxValue.length - 1);
+        return checkBoxValue;
+    }
 
     $("#form").submit(function() {
-      nodeIds = [];
-      getNodeIds(tree.treeview('getChecked'));
-      var name = $("#name").val();
-      if (!name) {
-        toast('角色名不能为空');
+        var role = $("#role").val();
+        var description = $("#description").val();
+        var permIds = getTheCheckBoxValue();
+        if (!role) {
+            toast('角色名不能为空');
+            return false;
+        }
+        $.ajax({
+            url: '/admin/role/add',
+            async: true,
+            cache: false,
+            type: 'post',
+            dataType: 'json',
+            data: {
+                role: role,
+                description: description,
+                permIds: permIds
+            },
+            success: function(data) {
+                if (data.successful) {
+                    toast('保存成功');
+                    setTimeout(function() {
+                        window.location.href = "/admin/role/list";
+                    }, 1000);
+                } else {
+                    toast(data.describe);
+                }
+            }
+        })
         return false;
-      }
-      $.ajax({
-        url: '/admin/role/add',
-        async: true,
-        cache: false,
-        type: 'post',
-        dataType: 'json',
-        data: {
-          name: name,
-          nodeIds: nodeIds
-        },
-        success: function(data) {
-          if (data.code === 200) {
-            toast('添加成功');
-            setTimeout(function() {
-              window.location.href = "/admin/role/list";
-            }, 1000);
-          } else {
-            toast(data.description);
-          }
-        }
-      })
-      return false;
     })
-
-    function onNodeChecked(event, node_data) {
-      var first_index, last_index, last_node, nodes, range, i;
-      nodes = node_data.nodes;
-      if (nodes) {
-        first_index = node_data.nodeId;
-        last_node = nodes[nodes.length - 1];
-        while (last_node.nodes) {
-          nodes = last_node.nodes;
-          last_node = nodes[nodes.length - 1];
-        }
-        last_index = last_node.nodeId;
-        range = [];
-        for (i = first_index; i <= last_index; i++) {
-          range.push(i);
-        }
-        return tree.treeview('checkNode', [range, {silent: true}]);
-      }
-    }
-
-    function onNodeUnChecked(event, node_data) {
-      var first_index, last_index, last_node, nodes, range, i;
-      nodes = node_data.nodes;
-      if (nodes) {
-        first_index = node_data.nodeId;
-        last_node = nodes[nodes.length - 1];
-        while (last_node && last_node.nodes) {
-          nodes = last_node.nodes;
-          last_node = nodes[nodes.length - 1];
-        }
-        last_index = last_node.nodeId;
-        range = [];
-        for (i = first_index; i <= last_index; i++) {
-          range.push(i);
-        }
-        return tree.treeview('uncheckNode', [range, {silent: true}]);
-      }
-    }
-
-    function getNodeIds(nodes) {
-      $.each(nodes, function(i, v) {
-        if (!v.nodes) {
-          nodeIds.push(v.id);
-        }
-      })
-    }
-  })
 </script>
 </@html>

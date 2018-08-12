@@ -7,7 +7,7 @@
           <img src="/static/AdminLTE/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>欢迎您, 密拉诺</p>
+          <p>欢迎您, ${shi.principal!}</p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -20,7 +20,7 @@
           </a>
         </li>
       </#if>
-      <#if true>
+      <#if shi.allGranted('话题查询许可')>
         <li <#if page_tab=='topic'>class="active"</#if>>
           <a href="/admin/topic/list">
             <i class="fa fa-list"></i>
@@ -28,7 +28,7 @@
           </a>
         </li>
       </#if>
-      <#if true>
+      <#if shi.allGranted('评论查看许可')>
         <li <#if page_tab=='comment'>class="active"</#if>>
           <a href="/admin/comment/list">
             <i class="fa fa-comment"></i>
@@ -36,7 +36,7 @@
           </a>
         </li>
       </#if>
-      <#if true>
+      <#if shi.allGranted('标签查看许可')>
         <li <#if page_tab=='tag'>class="active"</#if>>
           <a href="/admin/tag/list">
             <i class="fa fa-list"></i>
@@ -44,7 +44,7 @@
           </a>
         </li>
       </#if>
-      <#if true>
+      <#if shi.allGranted('用户查看许可')>
         <li <#if page_tab=='user'>class="active"</#if>>
           <a href="/admin/user/list">
             <i class="fa fa-user"></i>
@@ -68,7 +68,7 @@
             </span>
         </a>
         <ul class="treeview-menu">
-          <#if true>
+          <#if shi.allGranted('后台用户列表')>
             <li <#if page_tab=='admin_user_list'>class="active"</#if>>
               <a href="/admin/admin_user/list">
                 <i class="fa fa-circle-o"></i>
@@ -76,7 +76,7 @@
               </a>
             </li>
           </#if>
-          <#if true>
+          <#if shi.allGranted('角色查询许可')>
             <li <#if page_tab=='admin_user_role'>class="active"</#if>>
               <a href="/admin/role/list">
                 <i class="fa fa-circle-o"></i>
@@ -84,7 +84,7 @@
               </a>
             </li>
           </#if>
-          <#if true>
+          <#if shi.allGranted('权限查询许可')>
             <li <#if page_tab=='admin_user_permission'>class="active"</#if>>
               <a href="/admin/permission/list">
                 <i class="fa fa-circle-o"></i>
@@ -95,7 +95,7 @@
         </ul>
       </li>
       <li>
-        <a href="/admin/logout">
+        <a href="/shiro/logout">
           <i class="fa fa-sign-out"></i>
           <span>退出</span>
         </a>

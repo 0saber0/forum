@@ -32,9 +32,9 @@
               <div class="form-group">
                 <label>角色</label>
                 <div>
-                  <#list roles as role>
+                  <#list sysRoleList as role>
                     <input type="radio" name="roleId" value="${role.id}" id="role_${role.id}">&nbsp;
-                    <label for="role_${role.id}">${role.name!}</label>
+                    <label for="role_${role.id}">${role.role!}</label>
                   </#list>
                 </div>
               </div>
@@ -46,6 +46,17 @@
     </div>
   </section>
 <script>
+
+    function getTheCheckBoxValue() {
+        var test = $("input[name='roleId']:checked");
+        var checkBoxValue = "";
+        test.each(function () {
+            checkBoxValue += $(this).val() + ",";
+        })
+        checkBoxValue = checkBoxValue.substring(0, checkBoxValue.length - 1);
+        return checkBoxValue;
+    }
+
   $(function() {
     $('input').iCheck({
       checkboxClass: 'icheckbox_square-blue',
@@ -55,7 +66,7 @@
     $("#form").submit(function() {
       var username = $("#username").val();
       var password = $("#password").val();
-      var roleId = $("input[name='roleId']:checked").val();
+      var roleId = getTheCheckBoxValue();
       if(!username) {
         toast('用户名不能为空');
         return false;
@@ -76,13 +87,13 @@
           roleId: roleId
         },
         success: function(data) {
-          if(data.code === 200) {
+          if(data.successful) {
             toast('添加成功');
             setTimeout(function() {
               window.location.href = '/admin/admin_user/list';
             }, 1000);
           } else {
-            toast(data.description);
+            toast(data.describe);
           }
         }
       })

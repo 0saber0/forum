@@ -34,10 +34,10 @@
               <td>${tag.tag!}</td>
               <td>${tag.num!0}</td>
               <td>
-                <#if true>
+                <#if shi.allGranted('标签编辑许可')>
                   <a href="/admin/tag/editPage?id=${tag.id}" class="btn btn-sm btn-warning">编辑</a>
                 </#if>
-                <#if true>
+                <#if shi.allGranted('标签删除许可')>
                   <button onclick="deleteBtn('${tag.id}')" class="btn btn-sm btn-danger">删除</button>
                 </#if>
               </td>

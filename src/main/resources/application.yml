@@ -32,8 +32,24 @@ spring:
           #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
           pool-prepared-statements: false
           max-pool-prepared-statement-per-connection-size: 20
+
+    thymeleaf:
+           cache: false
+           mode: LEGACYHTML5
+
 mybatis:
   mapper-locations: classpath:com/milanuo/springboot2mybatisforum/module/*/dao/*.xml
 
 myprops:
   photoPath: /home/saber/IdeaProjects/springboot2-mybatis-forum/src/main/resources/static/photo/user/
+
+logging:
+  file: /log/springboot.log
+  level:
+    com.milanuo.springboot2mybatisforum: trace
+  pattern:
+    console: "%d{yyyy-MM-dd} [%thread] %-5level %logger{50} - %msg%n"
+    file: "%d{yyyy-MM-dd} === [%thread] === %-5level === %logger{50} ==== %msg%n"
+
+
+
