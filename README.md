@@ -3,7 +3,7 @@
 - JDK8
 - Spring-Boot
 - MyBatis
-- Spring-Shiro
+- Shiro
 - Freemarker
 - MySQL
 - Bootstrap3
