@@ -2,9 +2,9 @@
     <div class="container">
         <br>
         <p>
-            <a href="https://github.com/yiiu-co/yiiu" target="_blank">源码地址</a>&nbsp;|&nbsp;
-            <a href="https://yiiu-co.github.io/yiiu/#/" target="_blank">搭建文档</a>&nbsp;|&nbsp;
-            <a href="https://github.com/yiiu-co/yiiu/blob/master/api.md" target="_blank">API</a>&nbsp;|&nbsp;
+            <a href="https://github.com/0saber0/forum" target="_blank">源码地址</a>&nbsp;|&nbsp;
+            <a href="https://github.com/0saber0/forum" target="_blank">搭建文档</a>&nbsp;|&nbsp;
+            <a href="https://github.com/0saber0/forum" target="_blank">API</a>&nbsp;|&nbsp;
             <a href="/admin/login" target="_blank">后台登录</a>
         </p>
         <p>致力于搭建一个促进交流的社区</p>
